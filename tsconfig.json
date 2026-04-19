@@ -20,7 +20,7 @@
         "./src/*"
       ],
       "@ant/claude-for-chrome-mcp": [
-        "./deps/@ant/claude-for-chrome-mcp/src/index.ts"
+        "./src/stubs/ant/claudeForChromeMcp.ts"
       ],
       "@ant/computer-use-mcp": [
         "./deps/@ant/computer-use-mcp/src/index.ts"

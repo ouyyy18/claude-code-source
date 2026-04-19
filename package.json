@@ -1,6 +1,6 @@
 {
   "name": "claude-code-source",
-  "version": "2.1.88-source.0",
+  "version": "20.18.88",
   "private": true,
   "type": "module",
   "description": "Source-first Bun + Ink workspace scaffold for the Claude Code snapshot.",
@@ -12,7 +12,11 @@
     "dev": "bun --watch src/entrypoints/dev-cli.tsx",
     "start": "bun src/entrypoints/dev-cli.tsx",
     "start:home": "env CLAUDE_CONFIG_DIR=\"$HOME/.claude\" bun src/entrypoints/dev-cli.tsx",
-    "mcp": "bun src/entrypoints/dev-mcp.ts"
+    "mcp": "bun src/entrypoints/dev-mcp.ts",
+    "build": "bun run scripts/build.ts",
+    "build:dev": "bun run scripts/build.ts --dev",
+    "build:dev:full": "bun run scripts/build.ts --dev --feature-set=dev-full",
+    "compile": "bun run scripts/build.ts --compile"
   },
   "dependencies": {
     "@alcalzone/ansi-tokenize": "^0.3.0",
