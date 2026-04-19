@@ -2,14 +2,7 @@ import { getGlobalConfig } from '../utils/config.js'
 import {
   type Companion,
   type CompanionBones,
-  EYES,
-  HATS,
-  RARITIES,
-  RARITY_WEIGHTS,
-  type Rarity,
-  SPECIES,
-  STAT_NAMES,
-  type StatName,
+  chonk,
 } from './types.js'
 
 // Mulberry32 — tiny seeded PRNG, good enough for picking ducks
@@ -36,51 +29,6 @@ function hashString(s: string): number {
   return h >>> 0
 }
 
-function pick<T>(rng: () => number, arr: readonly T[]): T {
-  return arr[Math.floor(rng() * arr.length)]!
-}
-
-function rollRarity(rng: () => number): Rarity {
-  const total = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0)
-  let roll = rng() * total
-  for (const rarity of RARITIES) {
-    roll -= RARITY_WEIGHTS[rarity]
-    if (roll < 0) return rarity
-  }
-  return 'common'
-}
-
-const RARITY_FLOOR: Record<Rarity, number> = {
-  common: 5,
-  uncommon: 15,
-  rare: 25,
-  epic: 35,
-  legendary: 50,
-}
-
-// One peak stat, one dump stat, rest scattered. Rarity bumps the floor.
-function rollStats(
-  rng: () => number,
-  rarity: Rarity,
-): Record<StatName, number> {
-  const floor = RARITY_FLOOR[rarity]
-  const peak = pick(rng, STAT_NAMES)
-  let dump = pick(rng, STAT_NAMES)
-  while (dump === peak) dump = pick(rng, STAT_NAMES)
-
-  const stats = {} as Record<StatName, number>
-  for (const name of STAT_NAMES) {
-    if (name === peak) {
-      stats[name] = Math.min(100, floor + 50 + Math.floor(rng() * 30))
-    } else if (name === dump) {
-      stats[name] = Math.max(1, floor - 10 + Math.floor(rng() * 15))
-    } else {
-      stats[name] = floor + Math.floor(rng() * 40)
-    }
-  }
-  return stats
-}
-
 const SALT = 'friend-2026-401'
 
 export type Roll = {
@@ -89,14 +37,19 @@ export type Roll = {
 }
 
 function rollFrom(rng: () => number): Roll {
-  const rarity = rollRarity(rng)
   const bones: CompanionBones = {
-    rarity,
-    species: pick(rng, SPECIES),
-    eye: pick(rng, EYES),
-    hat: rarity === 'common' ? 'none' : pick(rng, HATS),
-    shiny: rng() < 0.01,
-    stats: rollStats(rng, rarity),
+    rarity: 'legendary',
+    species: chonk,
+    eye: '✦',
+    hat: 'crown',
+    shiny: true,
+    stats: {
+      DEBUGGING: 99,
+      PATIENCE: 99,
+      CHAOS: 99,
+      WISDOM: 99,
+      SNARK: 99,
+    },
   }
   return { bones, inspirationSeed: Math.floor(rng() * 1e9) }
 }

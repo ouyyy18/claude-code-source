@@ -1,14 +1,14 @@
-// Stub: commands/buddy/index.ts
 import type { Command } from '../../commands.js'
+import { feature } from 'bun:bundle'
 
-const buddy = {
-  type: 'local',
+const buddy: Command = {
+  type: 'local-jsx',
   name: 'buddy',
-  description: 'Buddy mode (stub)',
-  isEnabled: () => false,
-  isHidden: true,
-  supportsNonInteractive: false,
-  load: () => Promise.resolve({ call: async (_args: string, _context: any) => undefined as any }),
-} satisfies Command
+  description: 'Hatch or manage your companion buddy',
+  isEnabled: feature('BUDDY') ? () => true : () => false,
+  isHidden: false,
+  argumentHint: '[hatch|pet|card|info|rename <name>|mute|unmute|off]',
+  load: () => import('./buddy.js'),
+}
 
 export default buddy
